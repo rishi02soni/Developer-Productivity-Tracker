@@ -1,0 +1,68 @@
+@import url('https://fonts.googleapis.com/css2?family=Segoe+UI:wght@300;400;600;700&display=swap');
+
+:root { 
+    font-family: 'Segoe UI', system-ui, sans-serif; 
+}
+
+body { 
+    transition: background-color 0.2s, color 0.2s; 
+    overflow: hidden; 
+}
+
+/* Fluent Design Shadows */
+.ms-card { 
+    border: 1px solid #edebe9; 
+    box-shadow: 0 1.6px 3.6px 0 rgba(0,0,0,0.1), 0 0.3px 0.9px 0 rgba(0,0,0,0.1); 
+    background: white;
+}
+
+.dark .ms-card { 
+    background: #252423; 
+    border-color: #323130; 
+}
+
+.sidebar-item.active { 
+    border-left: 3px solid #0078d4; 
+    background: #eff6fc; 
+    color: #0078d4; 
+    font-weight: 600; 
+}
+
+.dark .sidebar-item.active { 
+    background: #323130; 
+    color: #2899f5; 
+}
+
+/* Kanban Polish */
+.kanban-column { 
+    min-height: calc(100vh - 200px); 
+}
+
+.drag-over { 
+    background: rgba(0, 120, 212, 0.05); 
+    border-radius: 4px; 
+}
+
+/* Animations */
+@keyframes fadeIn { 
+    from { opacity: 0; transform: translateY(10px); } 
+    to { opacity: 1; transform: translateY(0); } 
+}
+
+.animate-view { 
+    animation: fadeIn 0.3s ease-out forwards; 
+}
+
+.loader-spin { 
+    border-top-color: #0078d4; 
+    animation: spin 0.8s linear infinite; 
+}
+
+@keyframes spin { 
+    0% { transform: rotate(0deg); } 
+    100% { transform: rotate(360deg); } 
+}
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-thumb { background: #ccc; border-radius: 10px; }
+.dark ::-webkit-scrollbar-thumb { background: #444; }

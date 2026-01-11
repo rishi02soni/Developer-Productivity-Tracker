@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevProductivity Pro | Engineering Intelligence</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        msBlue: '#0078d4',
+                        msBgLight: '#f3f2f1',
+                        msBgDark: '#1b1a19',
+                        msCardDark: '#252423',
+                        msBorderLight: '#edebe9',
+                        msBorderDark: '#323130',
+                        msSuccess: '#107c10',
+                        msError: '#d13438'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="h-screen flex flex-col bg-msBgLight text-gray-900 dark:bg-msBgDark dark:text-gray-100">
+
+    <div id="toastContainer" class="fixed bottom-6 right-6 z-[100] space-y-2"></div>
+
+    <div id="authOverlay" class="fixed inset-0 bg-[#f2f2f2] dark:bg-msBgDark z-[60] flex flex-col items-center justify-center p-4">
+        <div class="w-full max-w-[440px] p-10 ms-card rounded-sm bg-white dark:bg-msCardDark shadow-lg">
+            <div class="flex items-center mb-6">
+                <div class="grid grid-cols-2 gap-1 w-6 h-6 mr-3">
+                    <div class="bg-[#f25022] w-full h-full"></div>
+                    <div class="bg-[#7fbb00] w-full h-full"></div>
+                    <div class="bg-[#00a4ef] w-full h-full"></div>
+                    <div class="bg-[#ffb900] w-full h-full"></div>
+                </div>
+                <span class="text-xl font-semibold text-[#737373]">Microsoft</span>
+            </div>
+            
+            <div id="loginView">
+                <h2 class="text-2xl font-semibold mb-1" id="authTitle">Sign in</h2>
+                <p class="text-sm mb-6" id="authSubtitle">Use your engineering account</p>
+                
+                <div class="space-y-4">
+                    <div class="relative">
+                        <input type="email" id="loginEmail" class="w-full border-b border-black dark:border-white p-2 text-sm outline-none focus:border-msBlue transition-all dark:bg-transparent" placeholder="Email, phone, or Skype">
+                    </div>
+                    <div id="passwordArea" class="hidden">
+                        <input type="password" id="loginPassword" class="w-full border-b border-black dark:border-white p-2 text-sm outline-none focus:border-msBlue transition-all dark:bg-transparent" placeholder="Password">
+                    </div>
+                </div>
+
+                <div class="mt-8 flex flex-col space-y-4">
+                    <p class="text-xs">No account? <a href="#" onclick="toggleAuthMode()" class="text-msBlue hover:underline">Create one!</a></p>
+                </div>
+
+                <div class="mt-10 flex justify-end space-x-2">
+                    <button onclick="handleLoginStep()" id="loginBtn" class="bg-msBlue text-white px-9 py-1.5 text-sm font-semibold hover:brightness-110 transition-all min-w-[100px] flex items-center justify-center">
+                        <span id="loginBtnText">Next</span>
+                        <div id="loginLoader" class="hidden loader-spin rounded-full border-2 border-t-2 h-3 w-3 ml-2"></div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <header class="h-14 bg-msBlue text-white flex items-center px-6 justify-between shrink-0 shadow-md z-50">
+        <div class="flex items-center space-x-6">
+            <div class="flex items-center space-x-2">
+                <i class="fas fa-cubes text-xl"></i>
+                <span class="font-bold text-sm tracking-wide">DEVOPS INTELLIGENCE</span>
+            </div>
+            <div id="connStatus" class="flex items-center space-x-2 bg-black/20 px-3 py-1 rounded-full text-[10px]">
+                <span id="statusIndicator" class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                <span id="statusText">LOCAL_READY</span>
+            </div>
+        </div>
+        <div class="flex items-center space-x-4">
+            <button onclick="toggleTheme()" class="hover:bg-blue-700 p-2 rounded transition-all">
+                <i class="fas fa-moon dark:hidden"></i>
+                <i class="fas fa-sun hidden dark:block"></i>
+            </button>
+            <div id="userAlias" class="text-xs bg-white/20 px-3 py-1 rounded font-mono hidden md:block uppercase"></div>
+            <button onclick="logout()" class="text-xs hover:underline opacity-80">Logout</button>
+        </div>
+    </header>
+
+    <div class="flex flex-1 overflow-hidden">
+        <aside class="w-64 bg-white dark:bg-msCardDark border-r border-msBorderLight dark:border-msBorderDark flex flex-col shrink-0">
+            <nav class="mt-8 flex-1 space-y-1">
+                <div onclick="switchTab('dashboard')" id="tab-dashboard" class="sidebar-item active px-6 py-3 cursor-pointer text-sm flex items-center transition-all">
+                    <i class="fas fa-tachometer-alt w-5 mr-3"></i> Insights Hub
+                </div>
+                <div onclick="switchTab('board')" id="tab-board" class="sidebar-item px-6 py-3 cursor-pointer text-sm flex items-center transition-all">
+                    <i class="fas fa-columns w-5 mr-3"></i> Kanban Board
+                </div>
+                <div onclick="switchTab('analytics')" id="tab-analytics" class="sidebar-item px-6 py-3 cursor-pointer text-sm flex items-center transition-all">
+                    <i class="fas fa-chart-line w-5 mr-3"></i> Advanced Analytics
+                </div>
+                <div onclick="switchTab('activity')" id="tab-activity" class="sidebar-item px-6 py-3 cursor-pointer text-sm flex items-center transition-all">
+                    <i class="fas fa-stream w-5 mr-3"></i> Activity Feed
+                </div>
+            </nav>
+            <div class="p-6 border-t border-gray-100 dark:border-msBorderDark">
+                <h4 class="text-[10px] font-bold text-msBlue mb-2 uppercase">Sprint Commitment</h4>
+                <div class="space-y-2">
+                    <div class="flex justify-between text-[10px] font-bold">
+                        <span>Velocity</span>
+                        <span id="goalPercent">0%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 dark:bg-gray-700 h-1.5 rounded-full overflow-hidden">
+                        <div id="goalBar" class="bg-msBlue h-full transition-all duration-700" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="flex-1 overflow-y-auto p-8 relative scroll-smooth">
+            <div id="view-dashboard" class="space-y-8 animate-view">
+                <div class="flex justify-between items-end">
+                    <div>
+                        <h2 class="text-3xl font-light">Welcome, <span id="welcomeName">Developer</span></h2>
+                        <p class="text-sm text-gray-500">Telemetry-based performance metrics.</p>
+                    </div>
+                    <button onclick="openModal()" class="bg-msBlue text-white px-6 py-2 rounded-sm text-sm font-semibold shadow-md hover:brightness-110">
+                        <i class="fas fa-plus mr-2"></i> New Work Item
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="ms-card p-6 border-l-4 border-l-msBlue">
+                        <div class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Productivity Score</div>
+                        <div class="text-4xl font-light text-msBlue" id="scoreVal">0</div>
+                    </div>
+                    <div class="ms-card p-6">
+                        <div class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Focus Time (Hrs)</div>
+                        <div class="text-4xl font-light" id="focusVal">0.0</div>
+                    </div>
+                    <div class="ms-card p-6">
+                        <div class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Items Resolved</div>
+                        <div class="text-4xl font-light text-msSuccess" id="resolveVal">0</div>
+                    </div>
+                    <div class="ms-card p-6">
+                        <div class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Deep Work Sessions</div>
+                        <div class="text-4xl font-light text-orange-500" id="deepWorkCount">0</div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="ms-card p-6 h-80">
+                        <h3 class="text-xs font-bold text-gray-500 uppercase mb-6"><i class="fas fa-wave-square mr-2"></i> Focus Intensity</h3>
+                        <canvas id="velocityChart"></canvas>
+                    </div>
+                    <div class="ms-card p-6 h-80">
+                        <h3 class="text-xs font-bold text-gray-500 uppercase mb-6"><i class="fas fa-chart-pie mr-2"></i> Priority Mix</h3>
+                        <canvas id="distChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div id="view-board" class="hidden h-full flex flex-col animate-view">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-light">Agile Board</h2>
+                    <div class="flex items-center space-x-2 text-[10px] text-gray-400">
+                        <i class="fas fa-sync-alt animate-spin-slow"></i>
+                        <span>Live Sync Enabled</span>
+                    </div>
+                </div>
+                <div class="flex-1 grid grid-cols-1 md:grid-cols-4 gap-6 overflow-x-auto pb-6">
+                    <div class="kanban-column" id="target-Proposed" ondrop="drop(event, 'Proposed')" ondragover="allowDrop(event)">
+                        <div class="flex justify-between items-center mb-4 border-b-2 border-gray-200 pb-2">
+                            <span class="text-xs font-bold uppercase tracking-wider">Proposed</span>
+                            <span class="bg-gray-100 dark:bg-gray-800 text-[10px] px-2 rounded-full" id="count-Proposed">0</span>
+                        </div>
+                        <div id="col-Proposed" class="space-y-4"></div>
+                    </div>
+                    <div class="kanban-column" id="target-In-Progress" ondrop="drop(event, 'In-Progress')" ondragover="allowDrop(event)">
+                        <div class="flex justify-between items-center mb-4 border-b-2 border-msBlue pb-2">
+                            <span class="text-xs font-bold text-msBlue uppercase tracking-wider">Active Work</span>
+                            <span class="bg-blue-100 text-msBlue text-[10px] px-2 rounded-full" id="count-In-Progress">0</span>
+                        </div>
+                        <div id="col-In-Progress" class="space-y-4"></div>
+                    </div>
+                    <div class="kanban-column" id="target-Resolved" ondrop="drop(event, 'Resolved')" ondragover="allowDrop(event)">
+                        <div class="flex justify-between items-center mb-4 border-b-2 border-orange-400 pb-2">
+                            <span class="text-xs font-bold text-orange-600 uppercase tracking-wider">Resolved</span>
+                            <span class="bg-orange-100 text-orange-600 text-[10px] px-2 rounded-full" id="count-Resolved">0</span>
+                        </div>
+                        <div id="col-Resolved" class="space-y-4"></div>
+                    </div>
+                    <div class="kanban-column" id="target-Completed" ondrop="drop(event, 'Completed')" ondragover="allowDrop(event)">
+                        <div class="flex justify-between items-center mb-4 border-b-2 border-msSuccess pb-2">
+                            <span class="text-xs font-bold text-msSuccess uppercase tracking-wider">Completed</span>
+                            <span class="bg-green-100 text-msSuccess text-[10px] px-2 rounded-full" id="count-Completed">0</span>
+                        </div>
+                        <div id="col-Completed" class="space-y-4"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="view-activity" class="hidden animate-view">
+                <h2 class="text-2xl font-light mb-8">System Activity Feed</h2>
+                <div class="ms-card bg-white dark:bg-msCardDark max-w-4xl mx-auto overflow-hidden">
+                    <div id="activityFeedList" class="divide-y divide-gray-100 dark:divide-msBorderDark max-h-[70vh] overflow-y-auto"></div>
+                </div>
+            </div>
+
+            <div id="view-analytics" class="hidden space-y-8 animate-view">
+                <h2 class="text-2xl font-light">Performance Deep Dive</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="ms-card p-6"><div class="h-64"><canvas id="areaChart"></canvas></div></div>
+                    <div class="ms-card p-6 flex flex-col justify-center items-center">
+                        <div class="text-7xl font-light text-msBlue" id="efficiencyVal">0%</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="taskModal" class="fixed inset-0 bg-black/60 z-[100] hidden flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white dark:bg-msCardDark w-full max-w-lg rounded shadow-2xl border dark:border-msBorderDark overflow-hidden animate-view">
+            <div class="p-4 border-b dark:border-msBorderDark flex justify-between items-center bg-gray-50 dark:bg-msBgDark">
+                <h3 class="font-bold text-xs uppercase text-msBlue tracking-widest" id="modalTitle">Work Item Config</h3>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-msError"><i class="fas fa-times"></i></button>
+            </div>
+            <form id="taskForm" class="p-8 space-y-6">
+                <input type="hidden" id="editId">
+                <div>
+                    <label class="block text-[10px] font-bold text-gray-500 uppercase mb-2">Title</label>
+                    <input type="text" id="tTitle" required class="w-full border p-2.5 text-sm dark:bg-msBgDark dark:border-msBorderDark focus:ring-1 focus:ring-msBlue outline-none">
+                </div>
+                <div class="grid grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase mb-2">Priority</label>
+                        <select id="tPriority" class="w-full border p-2.5 text-sm dark:bg-msBgDark">
+                            <option value="Critical">Critical</option>
+                            <option value="High" selected>High</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Low">Low</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase mb-2">Tech Area</label>
+                        <input type="text" id="tArea" placeholder="API, UI..." class="w-full border p-2.5 text-sm dark:bg-msBgDark">
+                    </div>
+                </div>
+                <div class="flex justify-end space-x-3 pt-4">
+                    <button type="button" onclick="closeModal()" class="px-6 py-2 border text-[11px] font-bold uppercase">Cancel</button>
+                    <button type="submit" class="bg-msBlue text-white px-8 py-2 text-[11px] font-bold uppercase shadow-lg">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>
