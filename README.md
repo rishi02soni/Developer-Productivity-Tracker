@@ -1,26 +1,25 @@
-# Developer-Productivity-Tracker
 <h1 align="center">🚀 Developer Productivity Tracker</h1>
 
 <p align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=Segoe+UI&weight=600&size=24&duration=3000&pause=800&color=0078D4&center=true&vCenter=true&width=800&lines=GitHub+%2B+Azure+DevOps+Style+Analytics;Track+Commit+Velocity+%26+PR+Lifecycle;Engineering+Productivity%2C+Visualized" />
+  <img src="https://readme-typing-svg.demolab.com?font=Segoe+UI&weight=600&size=24&duration=3000&pause=800&color=0078D4&center=true&vCenter=true&width=900&lines=GitHub+%2B+Azure+DevOps+Style+Analytics;Track+Commit+Velocity+%26+PR+Lifecycle;Engineering+Productivity%2C+Visualized" />
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Frontend-React-61DAFB?logo=react&logoColor=white" />
-  <img src="https://img.shields.io/badge/Database-Azure%20Cosmos%20DB-0078D4?logo=microsoftazure&logoColor=white" />
-  <img src="https://img.shields.io/badge/Cloud-Azure-0089D6?logo=microsoftazure" />
+  <img src="https://img.shields.io/badge/Frontend-HTML%20%7C%20CSS%20%7C%20JavaScript-E34F26?logo=html5&logoColor=white" />
+  <img src="https://img.shields.io/badge/Backend-Node.js-339933?logo=node.js&logoColor=white" />
   <img src="https://img.shields.io/badge/Style-Microsoft%20DevOps-blue" />
+  <img src="https://img.shields.io/badge/Status-Active-success" />
 </p>
 
 ---
 
 ## 📊 Overview
 
-**Developer Productivity Tracker** is a GitHub + Azure DevOps–inspired engineering analytics platform that helps teams **measure, analyze, and optimize development efficiency**.
+**Developer Productivity Tracker** is a GitHub + Azure DevOps–inspired engineering analytics tool designed to measure and improve developer efficiency.
 
-The platform tracks **commit velocity**, **pull request lifecycle metrics**, and **collaboration patterns**, transforming raw repository data into **actionable insights** for engineering leaders and developers.
+The platform analyzes **commit velocity**, **pull request lifecycle metrics**, and **collaboration trends**, converting repository activity into **actionable insights** for engineering teams.
 
-Built with a modern **React frontend** and a **cloud-native backend powered by Azure Cosmos DB**, the system is designed for **scalability, performance, and real-time analytics**.
+Built using **HTML, CSS, JavaScript**, and a **Node.js backend**, the system follows a clean, scalable architecture suitable for real-world engineering workflows.
 
 ---
 
@@ -34,25 +33,25 @@ Built with a modern **React frontend** and a **cloud-native backend powered by A
 
 ## 🔑 Key Features
 
-- ⚡ **Commit Velocity Analytics**  
-  Track commit frequency, contributor activity, and delivery trends over time.
+- ⚡ **Commit Velocity Tracking**  
+  Monitor commit frequency, contributor activity, and development trends.
 
-- 🔄 **Pull Request Lifecycle Insights**  
-  Measure PR open time, review duration, merge latency, and workflow bottlenecks.
+- 🔄 **Pull Request Lifecycle Analytics**  
+  Analyze PR open time, review duration, and merge latency.
 
-- 📈 **Engineering Productivity Dashboards**  
-  Interactive, real-time visualizations for team and individual performance.
+- 📈 **Productivity Dashboards**  
+  Interactive visualizations for individual and team performance.
 
-- ☁️ **Cloud-Native & Scalable**  
-  Designed with Azure-first architecture using Cosmos DB for high-throughput analytics.
+- 🧩 **Modular Backend Architecture**  
+  Node.js-based services designed for scalability and maintainability.
 
 ---
 
-## 🧠 System Architecture (High-Level)
+## 🧠 High-Level Architecture
 
 ```text
-React Dashboard
-      ↓
-API Layer (Azure-ready services)
-      ↓
-Azure Cosmos DB (NoSQL Analytics Store)
+Web Dashboard (HTML, CSS, JavaScript)
+              ↓
+        Node.js API Layer
+              ↓
+     Analytics & Metrics Engine
